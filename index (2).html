@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fde8ec">
+<title>Un pequeño reino para mi princesa</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,600&family=Caveat:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{--wine:#7d3350;--gold:#d4a24c;--star:#e3b04f}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;font-family:'Cormorant Garamond',Georgia,serif;color:#5c2a40}
+body{background:linear-gradient(160deg,#fff6ea,#fde8ec 55%,#f7c5d0);transition:background 2s}
+body.night{background:linear-gradient(180deg,#1b1438,#3a2552 60%,#6b3a63);color:#fdeff3;--star:#fff}
+#bg,#fx{position:fixed;inset:0;pointer-events:none;overflow:hidden}#fx{z-index:50}
+.star{position:absolute;left:var(--x);top:var(--y);width:var(--s);height:var(--s);background:var(--star);border-radius:50%;box-shadow:0 0 6px var(--star);animation:tw var(--d) ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.1;transform:scale(.6)}50%{opacity:.9;transform:scale(1)}}
+.petal{position:absolute;top:-5vh;left:var(--x);width:var(--w);height:calc(var(--w)*1.3);background:linear-gradient(135deg,#ffd3de,#f48fb1);border-radius:150% 0 150% 0;opacity:.85;animation:fall var(--t) linear forwards}
+.fx{position:absolute;top:-8vh;left:var(--x);font-size:var(--z);font-style:normal;animation:fall var(--t) ease-in forwards}
+@keyframes fall{to{transform:translate3d(var(--dx),112vh,0) rotate(540deg)}}
+.fly{position:absolute;bottom:-3vh;left:var(--x);width:6px;height:6px;border-radius:50%;background:#ffe9a8;box-shadow:0 0 10px 3px #ffd56b;animation:rise var(--t) ease-in forwards}
+@keyframes rise{0%{opacity:0}15%,85%{opacity:1}100%{transform:translate3d(var(--dx),-100vh,0);opacity:0}}
+.up{position:absolute;left:var(--x);top:var(--y);font-style:normal;animation:up 1.4s ease-out forwards}
+@keyframes up{to{transform:translate(var(--dx),-90px) scale(1.4);opacity:0}}
+#veil{position:fixed;inset:0;z-index:40;pointer-events:none;background:radial-gradient(circle,#fff9,#f7c5d0cc);opacity:0}
+#veil.f{animation:vf 1.2s}@keyframes vf{40%{opacity:1}}
+.scene{position:fixed;inset:0;z-index:2;display:flex;padding:calc(env(safe-area-inset-top) + 60px) 20px calc(env(safe-area-inset-bottom) + 28px);overflow-y:auto;opacity:0;visibility:hidden;transform:scale(1.03);filter:blur(10px);transition:opacity .9s,transform .9s,filter .9s,visibility 0s .9s}
+.scene.on{opacity:1;visibility:visible;transform:none;filter:none;transition:opacity 1.1s .15s,transform 1.1s .15s,filter 1.1s .15s}
+.wrap{margin:auto;width:min(100%,430px);text-align:center}
+h1,h2{font-weight:600;line-height:1.1;margin:0 0 .6rem;color:var(--wine)}
+h1{font-size:clamp(2.4rem,11vw,3.3rem)}h2{font-size:clamp(2rem,9vw,2.5rem)}
+body.night h1,body.night h2{color:#ffe3ea}
+p{font-size:1.35rem;line-height:1.4;margin:.6rem 0}
+.hint{font-style:italic;opacity:.8;font-size:1.2rem}
+.btn{margin-top:1.1rem;min-height:58px;padding:.7rem 2rem;border:0;border-radius:99px;font:600 1.35rem 'Cormorant Garamond',Georgia,serif;color:#5a2236;background:linear-gradient(135deg,#fbe7a8,#e3b04f 55%,#f3d27f);box-shadow:0 8px 22px rgba(212,162,76,.45),inset 0 1px 0 #fff9;cursor:pointer;transition:transform .2s}
+.btn:active{transform:scale(.96)}.pulse{animation:pulse 2s ease-in-out infinite}@keyframes pulse{50%{transform:scale(1.05)}}
+[hidden]{display:none!important}
+.msg{min-height:4.4rem;margin:.6rem 0;padding:.8rem 1rem;border-radius:18px;background:#fff9;border:1px solid #e3b04f66;font-size:1.35rem;font-style:italic;display:flex;align-items:center;justify-content:center}
+#hud{position:fixed;top:calc(env(safe-area-inset-top) + 12px);left:14px;z-index:20;display:flex;gap:8px;font-size:1.35rem;opacity:0;transition:opacity 1s}
+#hud.show{opacity:1}#hud span{filter:grayscale(1);opacity:.35;transition:.6s}#hud span.ok{filter:none;opacity:1;transform:scale(1.15)}
+#mus{position:fixed;top:calc(env(safe-area-inset-top) + 8px);right:14px;z-index:20;min-height:44px;padding:0 16px;border-radius:99px;border:1px solid #d4a24c88;background:#fffc;color:#7d3350;font:600 1.05rem 'Cormorant Garamond',Georgia,serif}
+.emo{font-size:2.4rem;letter-spacing:.3rem;animation:bob 3s ease-in-out infinite}@keyframes bob{50%{transform:translateY(-8px)}}
+#bq{width:min(100%,330px);height:auto;overflow:visible}
+.fl{cursor:pointer;transform-box:fill-box;transform-origin:50% 100%;animation:sway 4s ease-in-out infinite alternate}
+@keyframes sway{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
+.fl.tap{filter:drop-shadow(0 0 7px #fff) brightness(1.1)}
+.coins{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;justify-items:center;margin:1rem 0}
+.coin{width:min(27vw,108px);aspect-ratio:1;border-radius:50%;border:0;padding:0;cursor:pointer;display:grid;place-items:center;font-size:2.6rem;color:#a96f1c;text-shadow:0 1px 0 #fff8;background:radial-gradient(circle at 32% 28%,#fff3b8,#e9b94f 45%,#b9812a);box-shadow:0 6px 14px rgba(150,100,20,.4),inset 0 0 0 4px #f6df9a,inset 0 0 0 6px #b9812a88;animation:bob 3s ease-in-out infinite;animation-delay:var(--dl);transition:background .5s}
+.coin.on{background:radial-gradient(circle at 32% 28%,#fff,#fde8ec 55%,#f7c5d0);color:#e0607f;box-shadow:0 0 18px #f48fb1aa,inset 0 0 0 4px #f6df9a,inset 0 0 0 6px #d4a24c88;animation:spin .8s}
+@keyframes spin{from{transform:rotateY(0)}to{transform:rotateY(360deg)}}
+.stage{position:relative;width:210px;height:250px;margin:.4rem auto}.stage .sil{position:absolute;inset:0}
+.up2{opacity:0;transition:opacity 1.6s 1.8s}.stage.ok .up2{opacity:1}.stage .hr,.stage .dr{transition:fill 2s 1.6s}.stage.ok .hr{fill:#7a2a4c}.stage.ok .dr{fill:#f2c45e}.stage{transition:filter 2s 1.6s}.stage.ok{filter:drop-shadow(0 0 18px #f6df9acc)}
+#crown{position:absolute;left:50%;top:4px;width:96px;margin-left:-48px;transform:translateY(-70px) scale(1.7);filter:drop-shadow(0 0 12px #f6df9a);animation:bob2 3s ease-in-out infinite}
+#crown.go{animation:land 2.6s cubic-bezier(.5,0,.2,1) forwards}
+@keyframes land{0%{transform:translateY(-70px) scale(1.7)}35%{transform:translateY(-120px) scale(1.9) rotate(-4deg)}100%{transform:none}}
+@keyframes bob2{50%{transform:translateY(-82px) scale(1.7)}}
+.env{position:relative;width:280px;height:190px;margin:1.4rem auto;cursor:pointer;perspective:700px;animation:bob 3s ease-in-out infinite;transition:opacity .8s}
+.env.gone{opacity:0;pointer-events:none;height:0;margin:0}
+.env div{position:absolute}
+.env .back{inset:0;background:#f2b7c5;border-radius:6px;box-shadow:0 12px 26px rgba(125,51,80,.25)}
+.env .paper{left:14px;right:14px;top:14px;height:160px;background:#fffdf7;border-radius:4px;z-index:2;transition:transform 1s .5s}
+.env .front{inset:0;z-index:3;background:#f8c9d5;clip-path:polygon(0 0,50% 58%,100% 0,100% 100%,0 100%)}
+.env .flap{left:0;right:0;top:0;height:60%;z-index:4;background:#f19bb1;clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .8s,z-index 0s .4s}
+.env .seal{left:50%;top:50%;z-index:5;font-size:2rem;transform:translateX(-50%);transition:opacity .4s}
+.env.open .flap{transform:rotateX(180deg);z-index:1}.env.open .paper{transform:translateY(-100px)}.env.open .seal{opacity:0}
+.letter{background:#fffdf7;border-radius:10px;padding:1.5rem 1.4rem;text-align:left;font-family:Caveat,'Segoe Print',cursive;font-size:1.6rem;line-height:1.3;color:#4a2b3a;box-shadow:0 14px 34px rgba(125,51,80,.25);animation:rs 1.2s}
+.letter p{font:inherit;margin:.7rem 0}.letter .sig{text-align:right;margin-top:1.2rem}
+@keyframes rs{from{opacity:0;transform:translateY(30px)}}
+#field{position:fixed;left:0;bottom:0;width:100%;height:24vh;z-index:1;opacity:0;transition:opacity 3s;pointer-events:none}
+body.night #field{opacity:1}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important}}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<g id="tulip"><path d="M0,0C-21,-2 -25,-40 0,-66C25,-40 21,-2 0,0Z" fill="currentColor"/><path d="M-2,0C-24,-6 -29,-44 -12,-62C-9,-44 -5,-20 -2,0Z" fill="#fff" opacity=".25"/><path d="M2,0C24,-6 29,-44 12,-62C9,-44 5,-20 2,0Z" fill="#000" opacity=".1"/></g>
+<g id="rose"><path d="M-13,-8Q0,10 13,-8Q0,0 -13,-8Z" fill="#4f9d6a"/><circle cy="-24" r="25" fill="currentColor"/><path d="M-16,-24a16,16 0 0 1 32,0a9,9 0 0 1 -18,0a4.5,4.5 0 0 1 9,0" fill="none" stroke="#000" stroke-opacity=".25" stroke-width="2.6" stroke-linecap="round"/><circle cy="-24" r="25" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="2"/></g>
+<linearGradient id="gg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff0b0"/><stop offset=".5" stop-color="#e9b94f"/><stop offset="1" stop-color="#b9812a"/></linearGradient>
+</defs></svg>
+<div id="bg"></div><div id="fx"></div><div id="veil"></div>
+<div id="hud"><span id="h-f">🌷</span><span id="h-c">🪙</span><span id="h-k">👑</span><span id="h-l">💌</span></div>
+<button id="mus">🎵 Activar música</button>
+
+<section class="scene on"><div class="wrap">
+ <div class="emo">👑🌷🪙</div>
+ <h1>Un pequeño reino para mi princesa</h1>
+ <p class="hint">para <span id="nm"></span></p>
+ <p>Hoy quería darte flores, monedas y una corona… pero como no puedo estar a tu lado, preparé algo que puedes abrir desde donde estés.</p>
+ <button class="btn pulse" id="go">Abrir mi regalito 💗</button>
+</div></section>
+
+<section class="scene"><div class="wrap">
+ <h2>Las flores para ti</h2>
+ <svg id="bq" viewBox="0 0 300 340">
+  <g fill="none" stroke="#5aa176" stroke-width="4" stroke-linecap="round"><path d="M150,325Q125,240 82,140"/><path d="M150,325Q175,240 218,140"/><path d="M150,325Q150,220 150,100"/><path d="M150,325Q130,270 100,205"/><path d="M150,325Q170,270 200,205"/></g>
+  <path d="M150,250Q95,235 80,195Q125,200 150,250Z" fill="#79b98e"/><path d="M150,250Q205,235 220,195Q175,200 150,250Z" fill="#79b98e"/>
+  <g transform="translate(82,140) rotate(-10)"><g class="fl" data-i="0" color="#f48fb1"><use href="#tulip"/></g></g>
+  <g transform="translate(218,140) rotate(10)"><g class="fl" data-i="1" color="#f8a5c2" style="animation-delay:-1s"><use href="#tulip"/></g></g>
+  <g transform="translate(150,100)"><g class="fl" data-i="2" color="#e8607f" style="animation-delay:-2s"><use href="#rose"/></g></g>
+  <g transform="translate(100,205) rotate(-8)"><g class="fl" data-i="3" color="#ee7a97" style="animation-delay:-3s"><use href="#rose"/></g></g>
+  <g transform="translate(200,205) rotate(8)"><g class="fl" data-i="4" color="#ffb3c6" style="animation-delay:-1.5s"><use href="#tulip"/></g></g>
+  <path d="M100,240L200,240L158,333L142,333Z" fill="#fff1f4" stroke="#e3b04f" stroke-width="2"/>
+  <path d="M150,264L136,302M150,264L164,302" stroke="#e3b04f" stroke-width="5" stroke-linecap="round"/>
+  <path d="M150,262C120,240 112,278 150,262C188,278 180,240 150,262Z" fill="#e3b04f"/><circle cx="150" cy="262" r="6" fill="#c98f2e"/>
+ </svg>
+ <p class="hint" id="fh">Toca las flores 🌷 <span id="fc">0 de 5</span></p>
+ <div class="msg" id="fmsg"></div>
+ <p>No puedo entregarte estas flores con mis propias manos hoy, pero las elegí pensando en ti.</p>
+ <button class="btn" id="fn" hidden>Seguir ✨</button>
+</div></section>
+
+<section class="scene"><div class="wrap">
+ <h2>Las monedas de amor</h2>
+ <p class="hint">Toca cada moneda para descubrir una razón 🪙</p>
+ <div class="coins" id="coins"></div>
+ <div class="msg" id="cmsg"></div>
+ <button class="btn" id="cn" hidden>Seguir ✨</button>
+</div></section>
+
+<section class="scene"><div class="wrap">
+ <h2>La corona de mi princesa</h2>
+ <div class="stage">
+  <svg class="sil" viewBox="0 0 210 250"><defs><clipPath id="cp"><circle cx="105" cy="140" r="100"/></clipPath><linearGradient id="gm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3f5"/><stop offset="1" stop-color="#f7c5d0"/></linearGradient></defs>
+   <circle cx="105" cy="140" r="100" fill="url(#gm)" stroke="#d4a24c" stroke-width="4"/>
+   <g clip-path="url(#cp)"><path class="hr" d="M62,108C55,52 155,52 148,108C154,160 156,190 146,215L64,215C54,190 56,160 62,108Z" fill="#b4506b"/><path class="dr" d="M20,250C24,196 70,172 105,172C140,172 186,196 190,250Z" fill="#e88aa5"/><rect x="95" y="135" width="20" height="42" fill="#f8d4c8"/><circle cx="105" cy="105" r="40" fill="#fbdcd2"/>
+<g class="up2"><path d="M65,102C68,60 142,60 145,102C130,82 90,80 65,102Z" fill="#7a2a4c"/><circle cx="86" cy="116" r="7" fill="#f6a1b5" opacity=".6"/><circle cx="124" cy="116" r="7" fill="#f6a1b5" opacity=".6"/><path d="M88,104Q94,99 100,104M110,104Q116,99 122,104" fill="none" stroke="#7a2a4c" stroke-width="2.4" stroke-linecap="round"/><path d="M94,124Q105,134 116,124" fill="none" stroke="#d6506f" stroke-width="3" stroke-linecap="round"/><circle cx="66" cy="124" r="4" fill="#f6df9a"/><circle cx="144" cy="124" r="4" fill="#f6df9a"/><path d="M80,178Q105,200 130,178" fill="none" stroke="#f6df9a" stroke-width="3"/><path d="M105,198l-6,-6a4,4 0 0 1 6,-5a4,4 0 0 1 6,5z" fill="#e8607f"/><circle cx="105" cy="140" r="100" fill="none" stroke="#fff" stroke-width="5" opacity=".7"/></g></g>
+<g class="up2" fill="#e3b04f"><path d="M22,70l3,8l8,3l-8,3l-3,8l-3,-8l-8,-3l8,-3z"/><path d="M190,95l2,6l6,2l-6,2l-2,6l-2,-6l-6,-2l6,-2z"/><path d="M180,40l2,5l5,2l-5,2l-2,5l-2,-5l-5,-2l5,-2z"/></g></svg>
+  <svg id="crown" viewBox="0 0 120 80"><path d="M10,70L4,22L36,44L60,8L84,44L116,22L110,70Z" fill="url(#gg)" stroke="#a96f1c" stroke-width="2.5" stroke-linejoin="round"/><rect x="10" y="62" width="100" height="12" rx="4" fill="url(#gg)" stroke="#a96f1c" stroke-width="2.5"/><circle cx="4" cy="20" r="5" fill="#f8bbd0"/><circle cx="60" cy="8" r="6" fill="#e8607f"/><circle cx="116" cy="20" r="5" fill="#f8bbd0"/><circle cx="35" cy="68" r="3" fill="#fff"/><circle cx="60" cy="68" r="3.5" fill="#e8607f"/><circle cx="85" cy="68" r="3" fill="#fff"/></svg>
+ </div>
+ <button class="btn pulse" id="claim">Reclamar mi corona</button>
+ <div id="kmsg" hidden><p>No necesitas una corona para ser especial, pero hoy quería regalarte una porque para mí eres mi princesa.</p><button class="btn" id="kn">Abrir mi carta 💌</button></div>
+</div></section>
+
+<section class="scene"><div class="wrap">
+ <div id="ehead"><h2>Una carta para ti</h2><p class="hint">Toca el sobre 💌</p>
+ <div class="env" id="env"><div class="back"></div><div class="paper"></div><div class="front"></div><div class="flap"></div><div class="seal">💗</div></div></div>
+ <div class="letter" id="lt" hidden></div>
+ <button class="btn" id="ln" hidden>Continuar 🌙</button>
+</div></section>
+
+<section class="scene"><div class="wrap">
+ <h2>Feliz Día de la Novia, mi amor.</h2>
+ <p>Hoy no pude darte este regalo en tus manos, pero quería que tuvieras un pedacito de mí contigo. ❤️</p>
+ <button class="btn" id="again">Volver a vivir esta sorpresa</button>
+</div></section>
+<svg id="field" viewBox="0 0 360 140" preserveAspectRatio="xMidYMax slice"></svg>
+
+<script>
+/* ===== EDITA AQUÍ ===== */
+const NOMBRE = "Luz Miscel";
+const FIRMA  = "Eynar Roghel";
+
+// Mensajes que salen al tocar cada una de las 5 flores
+const FLORES = [
+  "Esta la elegí pensando en tu sonrisa, Luz.",
+  "Esta es para que hoy te sientas muy querida.",
+  "Porque mereces cosas bonitas todos los días.",
+  "Esta es por los días en que me alegras sin darte cuenta.",
+  "Y esta, para que te acuerdes de mí cada vez que la veas."
+];
+
+// Razones en las monedas (puedes poner más o menos)
+const MONEDAS = [
+  "Por tu sonrisa",
+  "Por la paz que siento cuando hablo contigo",
+  "Por hacer especiales mis días",
+  "Por ser tú, tal cual eres",
+  "Por cada vez que me haces reír",
+  "Por estar en mi vida"
+];
+
+// La carta: cada línea es un párrafo. Puedes agregar uno con un recuerdo de ustedes.
+const CARTA = [
+  `Mi querida ${NOMBRE},`,
+  "Hoy es tu día y lo que más quería era estar a tu lado: verte sonreír, abrazarte y darte todo esto en persona. No se pudo, y te confieso que me costó. Pero no quería que el día pasara sin que supieras que estuve pensando en ti.",
+  "Por eso armé este pequeño regalo, con mucho cariño. Las flores, las monedas, la corona… son detalles sencillos, pero cada uno lleva algo de lo que siento por ti.",
+  "No sé si te lo digo todo lo que debería, así que lo escribo aquí: contigo me siento tranquilo. Hablar contigo hace que un día cualquiera se vuelva mejor, y eso para mí vale muchísimo.",
+  "Gracias por tu paciencia, por tu cariño y por ser como eres. No necesito que seas perfecta; me gustas así, tal cual.",
+  "Ojalá hoy te haya sacado una sonrisa, aunque sea chiquita. Si lo logré, este regalo ya cumplió su trabajo.",
+  "Pronto me toca compensarte con un abrazo de los de verdad. Mientras tanto, quédate con esto, que es un pedacito de mí. Feliz Día de la Novia."
+];
+const DESPEDIDA = "Te quiero mucho,";
+/* ===== FIN DE LO EDITABLE ===== */
+
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],R=(a,b)=>a+Math.random()*(b-a);
+const scenes=$$('.scene');let cur=0,night=false,ft=new Set(),cc=0;
+$('#nm').textContent=NOMBRE;
+$('#lt').innerHTML=CARTA.map(p=>`<p>${p}</p>`).join('')+`<p class="sig">${DESPEDIDA}<br>${FIRMA}</p>`;
+for(let i=0;i<36;i++){const s=document.createElement('i');s.className='star';s.style.cssText=`--x:${R(0,100)}vw;--y:${R(0,100)}vh;--s:${R(2,4)}px;--d:${R(2,5)}s;animation-delay:-${R(0,5)}s`;$('#bg').append(s)}
+
+function petal(box,delay=0){const e=document.createElement('i');e.className='petal';e.style.cssText=`--x:${R(0,98)}vw;--w:${R(10,17)}px;--t:${R(9,15)}s;--dx:${R(-90,90)}px;animation-delay:${delay}s`;e.onanimationend=()=>e.remove();box.append(e)}
+function amb(){if(document.hidden)return;const b=$('#bg');if($$('#bg .petal,#bg .fly').length>=(night?14:10))return;
+ if(night){const e=document.createElement('i');e.className='fly';e.style.cssText=`--x:${R(2,96)}vw;--t:${R(7,12)}s;--dx:${R(-50,50)}px`;e.onanimationend=()=>e.remove();b.append(e)}else petal(b)}
+setInterval(amb,900);
+function rain(n,g=['♥','✦','✿']){for(let i=0;i<n;i++){const e=document.createElement('i');e.className='fx';e.textContent=g[i%g.length];e.style.cssText=`--x:${R(0,96)}vw;--z:${R(14,30)}px;--t:${R(2.6,5)}s;--dx:${R(-60,60)}px;color:${['#f48fb1','#e8607f','#e3b04f','#fff'][i%4]};animation-delay:${R(0,1.4)}s`;e.onanimationend=()=>e.remove();$('#fx').append(e)}}
+function burst(x,y){for(let i=0;i<6;i++){const e=document.createElement('i');e.className='up';e.textContent=i%2?'✦':'♥';e.style.cssText=`--x:${x+R(-30,30)}px;--y:${y+R(-10,10)}px;--dx:${R(-40,40)}px;color:${i%2?'#e3b04f':'#e8607f'};font-size:${R(14,24)}px`;e.onanimationend=()=>e.remove();$('#fx').append(e)}}
+function go(n){const v=$('#veil');v.classList.remove('f');void v.offsetWidth;v.classList.add('f');
+ scenes.forEach((s,i)=>s.classList.toggle('on',i===n));scenes[n].scrollTop=0;cur=n;rain(14);
+ if(n===1)for(let i=0;i<14;i++)petal($('#fx'),R(0,6));
+ if(n===5){night=true;document.body.classList.add('night');$$('#bg .petal').forEach(p=>p.remove());for(let i=0;i<6;i++)setTimeout(amb,i*300)}}
+const hud=k=>$('#h-'+k).classList.add('ok');
+
+$('#go').onclick=()=>{$('#hud').classList.add('show');go(1)};
+$$('.fl').forEach(f=>f.onclick=e=>{const i=+f.dataset.i;$('#fmsg').textContent=FLORES[i]||'💗';burst(e.clientX,e.clientY);f.classList.add('tap');ft.add(i);$('#fc').textContent=ft.size+' de 5';
+ if(ft.size==5){$('#fn').hidden=false;hud('f')}});
+$('#fn').onclick=()=>go(2);
+
+function buildCoins(){cc=0;const c=$('#coins');c.innerHTML='';$('#cmsg').textContent='';$('#cn').hidden=true;
+ MONEDAS.forEach((m,i)=>{const b=document.createElement('button');b.className='coin';b.textContent='♥';b.style.setProperty('--dl',-i*.5+'s');b.setAttribute('aria-label','Moneda '+(i+1));
+  b.onclick=e=>{$('#cmsg').textContent=m;burst(e.clientX,e.clientY);if(!b.classList.contains('on')){b.classList.add('on');cc++}if(cc==MONEDAS.length){$('#cn').hidden=false;hud('c')}};c.append(b)})}
+buildCoins();$('#cn').onclick=()=>go(3);
+
+$('#claim').onclick=()=>{$('#claim').hidden=true;$('#crown').classList.add('go');$('.stage').classList.add('ok');
+ setTimeout(()=>{rain(46,['♥','✦','✿','♥']);$('#kmsg').hidden=false;hud('k')},2400)};
+$('#kn').onclick=()=>go(4);
+
+$('#env').onclick=()=>{const e=$('#env');if(e.classList.contains('open'))return;e.classList.add('open');
+ setTimeout(()=>{e.classList.add('gone');$('#ehead').hidden=false;$('#ehead h2').hidden=$('#ehead .hint').hidden=true;$('#lt').hidden=false;$('#ln').hidden=false;hud('l');rain(12,['♥'])},1900)};
+$('#ln').onclick=()=>go(5);
+
+(function(){let h='<ellipse cx="180" cy="150" rx="260" ry="34" fill="#150f2b"/>';
+ [[20,1],[55,.8],[90,1.1],[130,.9],[170,1.2],[215,.9],[255,1.1],[295,.85],[335,1]].forEach(([x,s],i)=>{const y=122+(i%3)*5,c=['#f48fb1','#ffb3c6','#e8607f'][i%3];
+  h+=`<path d="M${x},140L${x},${y}" stroke="#2e6b4c" stroke-width="3"/><use href="#${i%2?'rose':'tulip'}" transform="translate(${x},${y}) scale(${s*.6})" color="${c}"/>`});
+ $('#field').innerHTML=h})();
+
+$('#again').onclick=()=>{night=false;document.body.classList.remove('night');ft.clear();$$('.fl').forEach(f=>f.classList.remove('tap'));
+ $('#fmsg').textContent='';$('#fc').textContent='0 de 5';$('#fn').hidden=true;buildCoins();
+ $('#claim').hidden=false;$('#kmsg').hidden=true;$('#crown').classList.remove('go');$('.stage').classList.remove('ok');
+ $('#env').classList.remove('open','gone');$('#ehead h2').hidden=$('#ehead .hint').hidden=false;$('#lt').hidden=true;$('#ln').hidden=true;
+ $$('#hud span').forEach(s=>s.classList.remove('ok'));go(0)};
+
+/* Música: caja de música generada en el navegador, solo suena si ella pulsa el botón */
+let ac,master,tm,step=0;
+const N=[523.25,659.25,783.99,659.25,880,783.99,659.25,587.33,523.25,659.25,783.99,1046.5,987.77,783.99,880,783.99,698.46,880,1046.5,880,783.99,659.25,587.33,659.25,523.25,587.33,659.25,783.99,659.25,587.33,523.25,0];
+const B=[130.81,130.81,130.81,98,87.31,130.81,130.81,98];
+function tone(f,d,v,type){const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g).connect(master);o.start(t);o.stop(t+d+.05)}
+$('#mus').onclick=()=>{const b=$('#mus');
+ if(tm){clearInterval(tm);tm=null;b.textContent='🎵 Activar música';return}
+ if(!ac){ac=new(window.AudioContext||window.webkitAudioContext)();master=ac.createGain();master.gain.value=.5;master.connect(ac.destination)}
+ ac.resume();b.textContent='🔇 Pausar música';
+ tm=setInterval(()=>{const n=N[step%32];if(n)tone(n,1.6,.16,'triangle');if(step%4==0)tone(B[(step/4|0)%8],1.8,.12,'sine');step++},450)};
+</script></body></html>
